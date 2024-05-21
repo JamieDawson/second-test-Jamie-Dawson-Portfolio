@@ -1,55 +1,71 @@
-jQuery(document).ready(function($) {
+import $ from 'jquery';
+
+$(document).ready(function() {
   "use strict";
 
-  //Contact
-  $('form.php-email-form').submit(function() {
-   
-    var f = $(this).find('.form-group'),
-      ferror = false,
-      emailExp = /^[^\s()<>@,;:\/]+@\w[\w\.-]+\.[a-z]{2,}$/i;
+  enum Rule {
+    Required = 'required',
+    MinLen = 'minlen',
+    Email = 'email',
+    Checked = 'checked',
+    RegExp = 'regexp'
+  }
 
-    f.children('input').each(function() { // run all inputs
-     
-      var i = $(this); // current input
-      var rule = i.attr('data-rule');
+  interface JQueryInputElement extends JQuery<HTMLElement> {
+    val(): string;
+    attr(attributeName: string): string | undefined;
+    is(selector: string): boolean;
+    next(selector: string): JQuery<HTMLElement>;
+  }
+
+  // Contact
+  $('form.php-email-form').submit(function() {
+    const f = $(this).find('.form-group');
+    let ferror = false;
+    const emailExp = /^[^\s()<>@,;:\/]+@\w[\w\.-]+\.[a-z]{2,}$/i;
+
+    f.children('input').each(function() {
+      const i = $(this) as JQueryInputElement;
+      let rule = i.attr('data-rule');
 
       if (rule !== undefined) {
-        var ierror = false; // error flag for current input
-        var pos = rule.indexOf(':', 0);
+        let ierror = false;
+        const pos = rule.indexOf(':', 0);
+        let exp: string | RegExp = '';
         if (pos >= 0) {
-          var exp = rule.substr(pos + 1, rule.length);
+          exp = rule.substr(pos + 1, rule.length);
           rule = rule.substr(0, pos);
         } else {
           rule = rule.substr(pos + 1, rule.length);
         }
 
         switch (rule) {
-          case 'required':
+          case Rule.Required:
             if (i.val() === '') {
               ferror = ierror = true;
             }
             break;
 
-          case 'minlen':
-            if (i.val().length < parseInt(exp)) {
+          case Rule.MinLen:
+            if (i.val().length < parseInt(exp as string)) {
               ferror = ierror = true;
             }
             break;
 
-          case 'email':
+          case Rule.Email:
             if (!emailExp.test(i.val())) {
               ferror = ierror = true;
             }
             break;
 
-          case 'checked':
-            if (! i.is(':checked')) {
+          case Rule.Checked:
+            if (!i.is(':checked')) {
               ferror = ierror = true;
             }
             break;
 
-          case 'regexp':
-            exp = new RegExp(exp);
+          case Rule.RegExp:
+            exp = new RegExp(exp as string);
             if (!exp.test(i.val())) {
               ferror = ierror = true;
             }
@@ -58,59 +74,61 @@ jQuery(document).ready(function($) {
         i.next('.validate').html((ierror ? (i.attr('data-msg') !== undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
       }
     });
-    f.children('textarea').each(function() { // run all inputs
 
-      var i = $(this); // current input
-      var rule = i.attr('data-rule');
+    f.children('textarea').each(function() {
+      const i = $(this) as JQueryInputElement;
+      let rule = i.attr('data-rule');
 
       if (rule !== undefined) {
-        var ierror = false; // error flag for current input
-        var pos = rule.indexOf(':', 0);
+        let ierror = false;
+        const pos = rule.indexOf(':', 0);
+        let exp: string = '';
         if (pos >= 0) {
-          var exp = rule.substr(pos + 1, rule.length);
+          exp = rule.substr(pos + 1, rule.length);
           rule = rule.substr(0, pos);
         } else {
           rule = rule.substr(pos + 1, rule.length);
         }
 
         switch (rule) {
-          case 'required':
+          case Rule.Required:
             if (i.val() === '') {
               ferror = ierror = true;
             }
             break;
 
-          case 'minlen':
+          case Rule.MinLen:
             if (i.val().length < parseInt(exp)) {
               ferror = ierror = true;
             }
             break;
         }
-        i.next('.validate').html((ierror ? (i.attr('data-msg') != undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
+        i.next('.validate').html((ierror ? (i.attr('data-msg') !== undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
       }
     });
+
     if (ferror) return false;
     else var str = $(this).serialize();
 
-    var this_form = $(this);
-    var action = $(this).attr('action');
+    const this_form = $(this);
+    const action = $(this).attr('action');
 
-    if( ! action ) {
+    if (!action) {
       this_form.find('.loading').slideUp();
       this_form.find('.error-message').slideDown().html('The form action property is not set!');
       return false;
     }
-    
+
     this_form.find('.sent-message').slideUp();
     this_form.find('.error-message').slideUp();
     this_form.find('.loading').slideDown();
-    
+
     $.ajax({
       type: "POST",
       url: action,
       data: str,
       success: function(msg) {
-        if (msg == 'OK') {
+        if (msg === 'OK') {
           this_form.find('.loading').slideUp();
           this_form.find('.sent-message').slideDown();
           this_form.find("input:not(input[type=submit]), textarea").val('');
@@ -122,5 +140,4 @@ jQuery(document).ready(function($) {
     });
     return false;
   });
-
 });
