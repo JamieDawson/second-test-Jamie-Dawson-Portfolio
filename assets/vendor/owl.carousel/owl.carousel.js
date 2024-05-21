@@ -1,8 +1,8 @@
-/**
- * Owl Carousel v2.3.4
- * Copyright 2013-2018 David Deutsch
- * Licensed under: SEE LICENSE IN https://github.com/OwlCarousel2/OwlCarousel2/blob/master/LICENSE
- */
+//**
+//* Owl Carousel v2.3.4
+//* Copyright 2013-2018 David Deutsch
+//* Licensed under: SEE LICENSE IN https://github.com/OwlCarousel2/OwlCarousel2/blob/master/LICENSE
+//*/
 /**
  * Owl carousel
  * @version 2.3.4
@@ -15,7 +15,7 @@
  * @todo Test Zepto
  * @todo stagePadding calculate wrong active classes
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates a carousel.
@@ -24,7 +24,7 @@
 	 * @param {HTMLElement|jQuery} element - The element to create the carousel for.
 	 * @param {Object} [options] - The options
 	 */
-	function Owl(element, options) {
+	function Owl(element: HTMLElement | JQuery, options?: any) {
 
 		/**
 		 * Current settings for the carousel.
@@ -159,16 +159,16 @@
 			}
 		};
 
-		$.each([ 'onResize', 'onThrottledResize' ], $.proxy(function(i, handler) {
+		$.each([ 'onResize', 'onThrottledResize' ], $.proxy(function(i: number, handler: string) {
 			this._handlers[handler] = $.proxy(this[handler], this);
 		}, this));
 
-		$.each(Owl.Plugins, $.proxy(function(key, plugin) {
+		$.each(Owl.Plugins, $.proxy(function(key: string, plugin: any) {
 			this._plugins[key.charAt(0).toLowerCase() + key.slice(1)]
 				= new plugin(this);
 		}, this));
 
-		$.each(Owl.Workers, $.proxy(function(priority, worker) {
+		$.each(Owl.Workers, $.proxy(function(priority: number, worker: any) {
 			this._pipe.push({
 				'filter': worker.filter,
 				'run': $.proxy(worker.run, this)
@@ -273,7 +273,7 @@
 		}
 	}, {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) {
+		run: function(cache: any) {
 			cache.current = this._items && this._items[this.relative(this._current)];
 		}
 	}, {
@@ -283,7 +283,7 @@
 		}
 	}, {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) {
+		run: function(cache: any) {
 			var margin = this.settings.margin || '',
 				grid = !this.settings.autoWidth,
 				rtl = this.settings.rtl,
@@ -299,7 +299,7 @@
 		}
 	}, {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) {
+		run: function(cache: any) {
 			var width = (this.width() / this.settings.items).toFixed(3) - this.settings.margin,
 				merge = null,
 				iterator = this._items.length,
@@ -384,7 +384,7 @@
 		}
 	}, {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) {
+		run: function(cache: any) {
 			var iterator = this._coordinates.length,
 				grid = !this.settings.autoWidth,
 				items = this.$stage.children();
@@ -406,7 +406,7 @@
 		}
 	}, {
 		filter: [ 'width', 'items', 'settings' ],
-		run: function(cache) {
+		run: function(cache: any) {
 			cache.current = cache.current ? this.$stage.children().index(cache.current) : 0;
 			cache.current = Math.max(this.minimum(), Math.min(this.maximum(), cache.current));
 			this.reset(cache.current);
@@ -477,7 +477,7 @@
 
 		// if the items are already in the DOM, grab them and skip item initialization
 		if ($items.length) {
-			this._items = $items.get().map(function(item) {
+			this._items = $items.get().map(function(item: HTMLElement) {
 				return $(item);
 			});
 
@@ -564,7 +564,7 @@
 		if (!overwrites) {
 			settings = $.extend({}, this.options);
 		} else {
-			$.each(overwrites, function(breakpoint) {
+			$.each(overwrites, function(breakpoint: number) {
 				if (breakpoint <= viewport && breakpoint > match) {
 					match = Number(breakpoint);
 				}
@@ -608,7 +608,7 @@
 	 * @protected
 	 * @returns {jQuery|HTMLElement} - The item container.
 	 */
-	Owl.prototype.prepare = function(item) {
+	Owl.prototype.prepare = function(item: HTMLElement) {
 		var event = this.trigger('prepare', { content: item });
 
 		if (!event.data) {
@@ -622,13 +622,13 @@
 	};
 
 	/**
-	 * Updates the view.
+	 * Updates the	 * Updates the view.
 	 * @public
 	 */
 	Owl.prototype.update = function() {
 		var i = 0,
 			n = this._pipe.length,
-			filter = $.proxy(function(p) { return this[p] }, this._invalidated),
+			filter = $.proxy(function(p: string) { return this[p] }, this._invalidated),
 			cache = {};
 
 		while (i < n) {
@@ -649,7 +649,7 @@
 	 * @param {Owl.Width} [dimension=Owl.Width.Default] - The dimension to return.
 	 * @returns {Number} - The width of the view in pixel.
 	 */
-	Owl.prototype.width = function(dimension) {
+	Owl.prototype.width = function(dimension: string) {
 		dimension = dimension || Owl.Width.Default;
 		switch (dimension) {
 			case Owl.Width.Inner:
@@ -757,7 +757,7 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onDragStart = function(event) {
+	Owl.prototype.onDragStart = function(event: any) {
 		var stage = null;
 
 		if (event.which === 3) {
@@ -797,7 +797,7 @@
 
 		$(document).on('mouseup.owl.core touchend.owl.core', $.proxy(this.onDragEnd, this));
 
-		$(document).one('mousemove.owl.core touchmove.owl.core', $.proxy(function(event) {
+		$(document).one('mousemove.owl.core touchmove.owl.core', $.proxy(function(event: any) {
 			var delta = this.difference(this._drag.pointer, this.pointer(event));
 
 			$(document).on('mousemove.owl.core touchmove.owl.core', $.proxy(this.onDragMove, this));
@@ -819,7 +819,7 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onDragMove = function(event) {
+	Owl.prototype.onDragMove = function(event: any) {
 		var minimum = null,
 			maximum = null,
 			pull = null,
@@ -855,7 +855,7 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onDragEnd = function(event) {
+	Owl.prototype.onDragEnd = function(event: any) {
 		var delta = this.difference(this._drag.pointer, this.pointer(event)),
 			stage = this._drag.stage.current,
 			direction = delta.x > 0 ^ this.settings.rtl ? 'left' : 'right';
@@ -893,7 +893,7 @@
 	 * @param {String} direction - The direction to check for the closest item. Ether `left` or `right`.
 	 * @return {Number} - The absolute position of the closest item.
 	 */
-	Owl.prototype.closest = function(coordinate, direction) {
+	Owl.prototype.closest = function(coordinate: number, direction: string) {
 		var position = -1,
 			pull = 30,
 			width = this.width(),
@@ -901,7 +901,7 @@
 
 		if (!this.settings.freeDrag) {
 			// check closest item
-			$.each(coordinates, $.proxy(function(index, value) {
+			$.each(coordinates, $.proxy(function(index: number, value: number) {
 				// on a left pull, check on current index
 				if (direction === 'left' && coordinate > value - pull && coordinate < value + pull) {
 					position = index;
@@ -935,7 +935,7 @@
 	 * @public
 	 * @param {Number} coordinate - The coordinate in pixels.
 	 */
-	Owl.prototype.animate = function(coordinate) {
+	Owl.prototype.animate = function(coordinate: number) {
 		var animate = this.speed() > 0;
 
 		this.is('animating') && this.onTransitionEnd();
@@ -968,7 +968,7 @@
 	 * @param {String} state - The state to check.
 	 * @returns {Boolean} - The flag which indicates if the carousel is busy.
 	 */
-	Owl.prototype.is = function(state) {
+	Owl.prototype.is = function(state: string) {
 		return this._states.current[state] && this._states.current[state] > 0;
 	};
 
@@ -978,7 +978,7 @@
 	 * @param {Number} [position] - The new absolute position or nothing to leave it unchanged.
 	 * @returns {Number} - The absolute position of the current item.
 	 */
-	Owl.prototype.current = function(position) {
+	Owl.prototype.current = function(position: number) {
 		if (position === undefined) {
 			return this._current;
 		}
@@ -1011,12 +1011,12 @@
 	 * @param {String} [part] - The part to invalidate.
 	 * @returns {Array.<String>} - The invalidated parts.
 	 */
-	Owl.prototype.invalidate = function(part) {
+	Owl.prototype.invalidate = function(part: string) {
 		if ($.type(part) === 'string') {
 			this._invalidated[part] = true;
 			this.is('valid') && this.leave('valid');
 		}
-		return $.map(this._invalidated, function(v, i) { return i });
+		return $.map(this._invalidated, function(v: any, i: string) { return i });
 	};
 
 	/**
@@ -1024,7 +1024,7 @@
 	 * @public
 	 * @param {Number} position - The absolute position of the new item.
 	 */
-	Owl.prototype.reset = function(position) {
+	Owl.prototype.reset = function(position: number) {
 		position = this.normalize(position);
 
 		if (position === undefined) {
@@ -1048,7 +1048,7 @@
 	 * @param {Boolean} [relative=false] - Whether the given position is relative or not.
 	 * @returns {Number} - The normalized position.
 	 */
-	Owl.prototype.normalize = function(position, relative) {
+	Owl.prototype.normalize = function(position: number, relative: boolean) {
 		var n = this._items.length,
 			m = relative ? 0 : this._clones.length;
 
@@ -1067,7 +1067,7 @@
 	 * @param {Number} position - The absolute position to convert.
 	 * @returns {Number} - The converted position.
 	 */
-	Owl.prototype.relative = function(position) {
+	Owl.prototype.relative = function(position: number) {
 		position -= this._clones.length / 2;
 		return this.normalize(position, true);
 	};
@@ -1078,7 +1078,7 @@
 	 * @param {Boolean} [relative=false] - Whether to return an absolute position or a relative position.
 	 * @returns {Number}
 	 */
-	Owl.prototype.maximum = function(relative) {
+	Owl.prototype.maximum = function(relative: boolean) {
 		var settings = this.settings,
 			maximum = this._coordinates.length,
 			iterator,
@@ -1119,7 +1119,7 @@
 	 * @param {Boolean} [relative=false] - Whether to return an absolute position or a relative position.
 	 * @returns {Number}
 	 */
-	Owl.prototype.minimum = function(relative) {
+	Owl.prototype.minimum = function(relative: boolean) {
 		return relative ? 0 : this._clones.length / 2;
 	};
 
@@ -1129,7 +1129,7 @@
 	 * @param {Number} [position] - The relative position of the item.
 	 * @return {jQuery|Array.<jQuery>} - The item at the given position or all items if no position was given.
 	 */
-	Owl.prototype.items = function(position) {
+	Owl.prototype.items = function(position: number) {
 		if (position === undefined) {
 			return this._items.slice();
 		}
@@ -1144,7 +1144,7 @@
 	 * @param {Number} [position] - The relative position of the item.
 	 * @return {jQuery|Array.<jQuery>} - The item at the given position or all items if no position was given.
 	 */
-	Owl.prototype.mergers = function(position) {
+	Owl.prototype.mergers = function(position: number) {
 		if (position === undefined) {
 			return this._mergers.slice();
 		}
@@ -1159,16 +1159,16 @@
 	 * @param {Number} [position] - The relative position of the item.
 	 * @returns {Array.<Number>} - The absolute positions of clones for the item or all if no position was given.
 	 */
-	Owl.prototype.clones = function(position) {
+	Owl.prototype.clones = function(position: number) {
 		var odd = this._clones.length / 2,
 			even = odd + this._items.length,
-			map = function(index) { return index % 2 === 0 ? even + index / 2 : odd - (index + 1) / 2 };
+			map = function(index: number) { return index % 2 === 0 ? even + index / 2 : odd - (index + 1) / 2 };
 
 		if (position === undefined) {
-			return $.map(this._clones, function(v, i) { return map(i) });
+			return $.map(this._clones, function(v: any```), i: number) { return map(i) });
 		}
 
-		return $.map(this._clones, function(v, i) { return v === position ? map(i) : null });
+		return $.map(this._clones, function(v: any, i: number) { return v === position ? map(i) : null });
 	};
 
 	/**
@@ -1177,7 +1177,7 @@
 	 * @param {Number} [speed] - The animation speed in milliseconds or nothing to leave it unchanged.
 	 * @returns {Number} - The current animation speed in milliseconds.
 	 */
-	Owl.prototype.speed = function(speed) {
+	Owl.prototype.speed = function(speed: number) {
 		if (speed !== undefined) {
 			this._speed = speed;
 		}
@@ -1192,13 +1192,13 @@
 	 * @param {Number} position - The absolute position of the item within `minimum()` and `maximum()`.
 	 * @returns {Number|Array.<Number>} - The coordinate of the item in pixel or all coordinates.
 	 */
-	Owl.prototype.coordinates = function(position) {
+	Owl.prototype.coordinates = function(position: number) {
 		var multiplier = 1,
 			newPosition = position - 1,
 			coordinate;
 
 		if (position === undefined) {
-			return $.map(this._coordinates, $.proxy(function(coordinate, index) {
+			return $.map(this._coordinates, $.proxy(function(coordinate: number, index: number) {
 				return this.coordinates(index);
 			}, this));
 		}
@@ -1228,7 +1228,7 @@
 	 * @param {Number} [factor=undefined] - The time factor in milliseconds.
 	 * @returns {Number} - The time in milliseconds for the translation.
 	 */
-	Owl.prototype.duration = function(from, to, factor) {
+	Owl.prototype.duration = function(from: number, to: number, factor: number) {
 		if (factor === 0) {
 			return 0;
 		}
@@ -1242,7 +1242,7 @@
 	 * @param {Number} position - The position of the item.
 	 * @param {Number} [speed] - The time in milliseconds for the transition.
 	 */
-	Owl.prototype.to = function(position, speed) {
+	Owl.prototype.to = function(position: number, speed: number) {
 		var current = this.current(),
 			revert = null,
 			distance = position - this.relative(current),
@@ -1284,7 +1284,7 @@
 	 * @public
 	 * @param {Number} [speed] - The time in milliseconds for the transition.
 	 */
-	Owl.prototype.next = function(speed) {
+	Owl.prototype.next = function(speed: number) {
 		speed = speed || false;
 		this.to(this.relative(this.current()) + 1, speed);
 	};
@@ -1294,7 +1294,7 @@
 	 * @public
 	 * @param {Number} [speed] - The time in milliseconds for the transition.
 	 */
-	Owl.prototype.prev = function(speed) {
+	Owl.prototype.prev = function(speed: number) {
 		speed = speed || false;
 		this.to(this.relative(this.current()) - 1, speed);
 	};
@@ -1304,7 +1304,7 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onTransitionEnd = function(event) {
+	Owl.prototype.onTransitionEnd = function(event: any) {
 
 		// if css2 animation then event object is undefined
 		if (event !== undefined) {
@@ -1344,7 +1344,7 @@
 	 * @public
 	 * @param {HTMLElement|jQuery|String} content - The new content.
 	 */
-	Owl.prototype.replace = function(content) {
+	Owl.prototype.replace = function(content: HTMLElement | JQuery | string) {
 		this.$stage.empty();
 		this._items = [];
 
@@ -1358,7 +1358,7 @@
 
 		content.filter(function() {
 			return this.nodeType === 1;
-		}).each($.proxy(function(index, item) {
+		}).each($.proxy(function(index: number, item: HTMLElement) {
 			item = this.prepare(item);
 			this.$stage.append(item);
 			this._items.push(item);
@@ -1377,7 +1377,7 @@
 	 * @param {HTMLElement|jQuery|String} content - The item content to add.
 	 * @param {Number} [position] - The relative position at which to insert the item otherwise the item will be added to the end.
 	 */
-	Owl.prototype.add = function(content, position) {
+	Owl.prototype.add = function(content: HTMLElement | JQuery | string, position: number) {
 		var current = this.relative(this._current);
 
 		position = position === undefined ? this._items.length : this.normalize(position, true);
@@ -1411,7 +1411,7 @@
 	 * @public
 	 * @param {Number} position - The relative position of the item to remove.
 	 */
-	Owl.prototype.remove = function(position) {
+	Owl.prototype.remove = function(position: number) {
 		position = this.normalize(position, true);
 
 		if (position === undefined) {
@@ -1434,11 +1434,11 @@
 	 * @todo Replace by a more generic approach
 	 * @protected
 	 */
-	Owl.prototype.preloadAutoWidthImages = function(images) {
-		images.each($.proxy(function(i, element) {
+	Owl.prototype.preloadAutoWidthImages = function(images: JQuery) {
+		images.each($.proxy(function(i: number, element: HTMLElement) {
 			this.enter('pre-loading');
 			element = $(element);
-			$(new Image()).one('load', $.proxy(function(e) {
+			$(new Image()).one('load', $.proxy(function(e: any) {
 				element.attr('src', e.target.src);
 				element.css('opacity', 1);
 				this.leave('pre-loading');
@@ -1490,7 +1490,7 @@
 	 * @param {String} [o] - The operator.
 	 * @param {Number} [b] - The right side operand.
 	 */
-	Owl.prototype.op = function(a, o, b) {
+	Owl.prototype.op = function(a: number, o: string, b: number) {
 		var rtl = this.settings.rtl;
 		switch (o) {
 			case '<':
@@ -1514,7 +1514,7 @@
 	 * @param {Function} listener - The event handler to attach.
 	 * @param {Boolean} capture - Wether the event should be handled at the capturing phase or not.
 	 */
-	Owl.prototype.on = function(element, event, listener, capture) {
+	Owl.prototype.on = function(element: HTMLElement, event: string, listener: Function, capture: boolean) {
 		if (element.addEventListener) {
 			element.addEventListener(event, listener, capture);
 		} else if (element.attachEvent) {
@@ -1530,7 +1530,7 @@
 	 * @param {Function} listener - The attached event handler to detach.
 	 * @param {Boolean} capture - Wether the attached event handler was registered as a capturing listener or not.
 	 */
-	Owl.prototype.off = function(element, event, listener, capture) {
+	Owl.prototype.off = function(element: HTMLElement, event: string, listener: Function, capture: boolean) {
 		if (element.removeEventListener) {
 			element.removeEventListener(event, listener, capture);
 		} else if (element.detachEvent) {
@@ -1549,11 +1549,11 @@
 	 * @param {Boolean} [enter=false] - Indicates if the call enters the specified state or not.
 	 * @returns {Event} - The event arguments.
 	 */
-	Owl.prototype.trigger = function(name, data, namespace, state, enter) {
+	Owl.prototype.trigger = function(name: string, data: any, namespace: string, state: string, enter: boolean) {
 		var status = {
 			item: { count: this._items.length, index: this.current() }
 		}, handler = $.camelCase(
-			$.grep([ 'on', name, namespace ], function(v) { return v })
+			$.grep([ 'on', name, namespace ], function(v: string) { return v })
 				.join('-').toLowerCase()
 		), event = $.Event(
 			[ name, 'owl', namespace || 'carousel' ].join('.').toLowerCase(),
@@ -1561,7 +1561,7 @@
 		);
 
 		if (!this._supress[name]) {
-			$.each(this._plugins, function(name, plugin) {
+			$.each(this._plugins, function(name: string, plugin: any) {
 				if (plugin.onTrigger) {
 					plugin.onTrigger(event);
 				}
@@ -1582,8 +1582,8 @@
 	 * Enters a state.
 	 * @param name - The state name.
 	 */
-	Owl.prototype.enter = function(name) {
-		$.each([ name ].concat(this._states.tags[name] || []), $.proxy(function(i, name) {
+	Owl.prototype.enter = function(name: string) {
+		$.each([ name ].concat(this._states.tags[name] || []), $.proxy(function(i: number, name: string) {
 			if (this._states.current[name] === undefined) {
 				this._states.current[name] = 0;
 			}
@@ -1596,8 +1596,8 @@
 	 * Leaves a state.
 	 * @param name - The state name.
 	 */
-	Owl.prototype.leave = function(name) {
-		$.each([ name ].concat(this._states.tags[name] || []), $.proxy(function(i, name) {
+	Owl.prototype.leave = function(name: string) {
+		$.each([ name ].concat(this._states.tags[name] || []), $.proxy(function(i: number, name: string) {
 			this._states.current[name]--;
 		}, this));
 	};
@@ -1607,7 +1607,7 @@
 	 * @public
 	 * @param {Object} object - The event or state to register.
 	 */
-	Owl.prototype.register = function(object) {
+	Owl.prototype.register = function(object: any) {
 		if (object.type === Owl.Type.Event) {
 			if (!$.event.special[object.name]) {
 				$.event.special[object.name] = {};
@@ -1615,7 +1615,7 @@
 
 			if (!$.event.special[object.name].owl) {
 				var _default = $.event.special[object.name]._default;
-				$.event.special[object.name]._default = function(e) {
+				$.event.special[object.name]._default = function(e: any) {
 					if (_default && _default.apply && (!e.namespace || e.namespace.indexOf('owl') === -1)) {
 						return _default.apply(this, arguments);
 					}
@@ -1630,7 +1630,7 @@
 				this._states.tags[object.name] = this._states.tags[object.name].concat(object.tags);
 			}
 
-			this._states.tags[object.name] = $.grep(this._states.tags[object.name], $.proxy(function(tag, i) {
+			this._states.tags[object.name] = $.grep(this._states.tags[object.name], $.proxy(function(tag: string, i: number) {
 				return $.inArray(tag, this._states.tags[object.name]) === i;
 			}, this));
 		}
@@ -1641,8 +1641,8 @@
 	 * @protected
 	 * @param {Array.<String>} events - The events to suppress.
 	 */
-	Owl.prototype.suppress = function(events) {
-		$.each(events, $.proxy(function(index, event) {
+	Owl.prototype.suppress = function(events: string[]) {
+		$.each(events, $.proxy(function(index: number, event: string) {
 			this._supress[event] = true;
 		}, this));
 	};
@@ -1652,8 +1652,8 @@
 	 * @protected
 	 * @param {Array.<String>} events - The events to release.
 	 */
-	Owl.prototype.release = function(events) {
-		$.each(events, $.proxy(function(index, event) {
+	Owl.prototype.release = function(events: string[]) {
+		$.each(events, $.proxy(function(index: number, event: string) {
 			delete this._supress[event];
 		}, this));
 	};
@@ -1665,7 +1665,7 @@
 	 * @param {Event} - The `mousedown` or `touchstart` event.
 	 * @returns {Object} - Contains `x` and `y` coordinates of current pointer position.
 	 */
-	Owl.prototype.pointer = function(event) {
+	Owl.prototype.pointer = function(event: any) {
 		var result = { x: null, y: null };
 
 		event = event.originalEvent || event || window.event;
@@ -1691,7 +1691,7 @@
 	 * @param {Number|String|Object|Array|Boolean|RegExp|Function|Symbol} - The input to be tested
 	 * @returns {Boolean} - An indication if the input is a Number or can be coerced to a Number
 	 */
-	Owl.prototype.isNumeric = function(number) {
+	Owl.prototype.isNumeric = function(number: any) {
 		return !isNaN(parseFloat(number));
 	};
 
@@ -1703,7 +1703,7 @@
 	 * @param {Object} - The second vector.
 	 * @returns {Object} - The difference.
 	 */
-	Owl.prototype.difference = function(first, second) {
+	Owl.prototype.difference = function(first: any, second: any) {
 		return {
 			x: first.x - second.x,
 			y: first.y - second.y
@@ -1715,7 +1715,7 @@
 	 * @todo Navigation plugin `next` and `prev`
 	 * @public
 	 */
-	$.fn.owlCarousel = function(option) {
+	$.fn.owlCarousel = function(option: any) {
 		var args = Array.prototype.slice.call(arguments, 1);
 
 		return this.each(function() {
@@ -1728,9 +1728,9 @@
 
 				$.each([
 					'next', 'prev', 'to', 'destroy', 'refresh', 'replace', 'add', 'remove'
-				], function(i, event) {
+				], function(i: number, event: string) {
 					data.register({ type: Owl.Type.Event, name: event });
-					data.$element.on(event + '.owl.carousel.core', $.proxy(function(e) {
+					data.$element.on(event + '.owl.carousel.core', $.proxy(function(e: any) {
 						if (e.namespace && e.relatedTarget !== this) {
 							this.suppress([ event ]);
 							data[event].apply(this, [].slice.call(arguments, 1));
@@ -1761,14 +1761,14 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates the auto refresh plugin.
 	 * @class The Auto Refresh Plugin
 	 * @param {Owl} carousel - The Owl Carousel
 	 */
-	var AutoRefresh = function(carousel) {
+	var AutoRefresh = function(carousel: any) {
 		/**
 		 * Reference to the core.
 		 * @protected
@@ -1796,7 +1796,7 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'initialized.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.autoRefresh) {
 					this.watch();
 				}
@@ -1873,14 +1873,14 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates the lazy plugin.
 	 * @class The Lazy Plugin
 	 * @param {Owl} carousel - The Owl Carousel
 	 */
-	var Lazy = function(carousel) {
+	var Lazy = function(carousel: any) {
 
 		/**
 		 * Reference to the core.
@@ -1902,7 +1902,7 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'initialized.owl.carousel change.owl.carousel resized.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel change.owl.carousel resized.owl.carousel': $.proxy(function(e: any) {
 				if (!e.namespace) {
 					return;
 				}
@@ -1917,7 +1917,7 @@
 						i = ((settings.center && n * -1) || 0),
 						position = (e.property && e.property.value !== undefined ? e.property.value : this._core.current()) + i,
 						clones = this._core.clones().length,
-						load = $.proxy(function(i, v) { this.load(v) }, this);
+						load = $.proxy(function(i: number, v: any) { this.load(v) }, this);
 					//TODO: Need documentation for this new option
 					if (settings.lazyLoadEager > 0) {
 						n += settings.lazyLoadEager;
@@ -1958,7 +1958,7 @@
 	 * @param {Number} position - The absolute position of the item.
 	 * @protected
 	 */
-	Lazy.prototype.load = function(position) {
+	Lazy.prototype.load = function(position: number) {
 		var $item = this._core.$stage.children().eq(position),
 			$elements = $item && $item.find('.owl-lazy');
 
@@ -1966,7 +1966,7 @@
 			return;
 		}
 
-		$elements.each($.proxy(function(index, element) {
+		$elements.each($.proxy(function(index: number, element: HTMLElement) {
 			var $element = $(element), image,
                 url = (window.devicePixelRatio > 1 && $element.attr('data-src-retina')) || $element.attr('data-src') || $element.attr('data-srcset');
 
@@ -2023,14 +2023,14 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates the auto height plugin.
 	 * @class The Auto Height Plugin
 	 * @param {Owl} carousel - The Owl Carousel
 	 */
-	var AutoHeight = function(carousel) {
+	var AutoHeight = function(carousel: any) {
 		/**
 		 * Reference to the core.
 		 * @protected
@@ -2046,17 +2046,17 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'initialized.owl.carousel refreshed.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel refreshed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.autoHeight) {
 					this.update();
 				}
 			}, this),
-			'changed.owl.carousel': $.proxy(function(e) {
+			'changed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.autoHeight && e.property.name === 'position'){
 					this.update();
 				}
 			}, this),
-			'loaded.owl.lazy': $.proxy(function(e) {
+			'loaded.owl.lazy': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.autoHeight
 					&& e.element.closest('.' + this._core.settings.itemClass).index() === this._core.current()) {
 					this.update();
@@ -2117,7 +2117,7 @@
 			heights = [],
 			maxheight = 0;
 
-		$.each(visible, function(index, item) {
+		$.each(visible, function(index: number, item: HTMLElement) {
 			heights.push($(item).height());
 		});
 
@@ -2156,14 +2156,14 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates the video plugin.
 	 * @class The Video Plugin
 	 * @param {Owl} carousel - The Owl Carousel
 	 */
-	var Video = function(carousel) {
+	var Video = function(carousel: any) {
 		/**
 		 * Reference to the core.
 		 * @protected
@@ -2192,27 +2192,27 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'initialized.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace) {
 					this._core.register({ type: 'state', name: 'playing', tags: [ 'interacting' ] });
 				}
 			}, this),
-			'resize.owl.carousel': $.proxy(function(e) {
+			'resize.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.video && this.isInFullScreen()) {
 					e.preventDefault();
 				}
 			}, this),
-			'refreshed.owl.carousel': $.proxy(function(e) {
+			'refreshed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.is('resizing')) {
 					this._core.$stage.find('.cloned .owl-video-frame').remove();
 				}
 			}, this),
-			'changed.owl.carousel': $.proxy(function(e) {
+			'changed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && e.property.name === 'position' && this._playing) {
 					this.stop();
 				}
 			}, this),
-			'prepared.owl.carousel': $.proxy(function(e) {
+			'prepared.owl.carousel': $.proxy(function(e: any) {
 				if (!e.namespace) {
 					return;
 				}
@@ -2232,7 +2232,7 @@
 		// register event handlers
 		this._core.$element.on(this._handlers);
 
-		this._core.$element.on('click.owl.video', '.owl-video-play-icon', $.proxy(function(e) {
+		this._core.$element.on('click.owl.video', '.owl-video-play-icon', $.proxy(function(e: any) {
 			this.play(e);
 		}, this));
 	};
@@ -2253,11 +2253,11 @@
 	 * @param {jQuery} target - The target containing the video data.
 	 * @param {jQuery} item - The item containing the video.
 	 */
-	Video.prototype.fetch = function(target, item) {
+	Video.prototype.fetch = function(target: any, item: any) {
 			var type = (function() {
 					if (target.attr('data-vimeo-id')) {
 						return 'vimeo';
-					} else if (target.attr('data-vzaar-id')) {
+									} else if (target.attr('data-vzaar-id')) {
 						return 'vzaar'
 					} else {
 						return 'youtube';
@@ -2317,7 +2317,7 @@
 	 * @param {Object} info - The video info object.
 	 * @see `fetch`
 	 */
-	Video.prototype.thumbnail = function(target, video) {
+	Video.prototype.thumbnail = function(target: any, video: any) {
 		var tnLink,
 			icon,
 			path,
@@ -2326,7 +2326,7 @@
 			srcType = 'src',
 			lazyClass = '',
 			settings = this._core.settings,
-			create = function(path) {
+			create = function(path: string) {
 				icon = '<div class="owl-video-play-icon"></div>';
 
 				if (settings.lazyLoad) {
@@ -2371,7 +2371,7 @@
 				url: '//vimeo.com/api/v2/video/' + video.id + '.json',
 				jsonp: 'callback',
 				dataType: 'jsonp',
-				success: function(data) {
+				success: function(data: any) {
 					path = data[0].thumbnail_large;
 					create(path);
 				}
@@ -2382,7 +2382,7 @@
 				url: '//vzaar.com/api/videos/' + video.id + '.json',
 				jsonp: 'callback',
 				dataType: 'jsonp',
-				success: function(data) {
+				success: function(data: any) {
 					path = data.framegrab_url;
 					create(path);
 				}
@@ -2408,7 +2408,7 @@
 	 * @public
 	 * @param {Event} event - The event arguments.
 	 */
-	Video.prototype.play = function(event) {
+	Video.prototype.play = function(event: any) {
 		var target = $(event.target),
 			item = target.closest('.' + this._core.settings.itemClass),
 			video = this._videos[item.attr('data-video')],
@@ -2484,14 +2484,14 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates the animate plugin.
 	 * @class The Navigation Plugin
 	 * @param {Owl} scope - The Owl Carousel
 	 */
-	var Animate = function(scope) {
+	var Animate = function(scope: any) {
 		this.core = scope;
 		this.core.options = $.extend({}, Animate.Defaults, this.core.options);
 		this.swapping = true;
@@ -2499,18 +2499,18 @@
 		this.next = undefined;
 
 		this.handlers = {
-			'change.owl.carousel': $.proxy(function(e) {
+			'change.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && e.property.name == 'position') {
 					this.previous = this.core.current();
 					this.next = e.property.value;
 				}
 			}, this),
-			'drag.owl.carousel dragged.owl.carousel translated.owl.carousel': $.proxy(function(e) {
+			'drag.owl.carousel dragged.owl.carousel translated.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace) {
 					this.swapping = e.type == 'translated';
 				}
 			}, this),
-			'translate.owl.carousel': $.proxy(function(e) {
+			'translate.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this.swapping && (this.core.options.animateOut || this.core.options.animateIn)) {
 					this.swap();
 				}
@@ -2572,7 +2572,7 @@
 		}
 	};
 
-	Animate.prototype.clear = function(e) {
+	Animate.prototype.clear = function(e: any) {
 		$(e.target).css( { 'left': '' } )
 			.removeClass('animated owl-animated-out owl-animated-in')
 			.removeClass(this.core.settings.animateIn)
@@ -2608,14 +2608,14 @@
  * @author Tom De Caluwé
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	/**
 	 * Creates the autoplay plugin.
 	 * @class The Autoplay Plugin
 	 * @param {Owl} scope - The Owl Carousel
 	 */
-	var Autoplay = function(carousel) {
+	var Autoplay = function(carousel: any) {
 		/**
 		 * Reference to the core.
 		 * @protected
@@ -2656,7 +2656,7 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'changed.owl.carousel': $.proxy(function(e) {
+			'changed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && e.property.name === 'settings') {
 					if (this._core.settings.autoplay) {
 						this.play();
@@ -2669,17 +2669,17 @@
 					this._time = 0;
 				}
 			}, this),
-			'initialized.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.autoplay) {
 					this.play();
 				}
 			}, this),
-			'play.owl.autoplay': $.proxy(function(e, t, s) {
+			'play.owl.autoplay': $.proxy(function(e: any, t: number, s: boolean) {
 				if (e.namespace) {
 					this.play(t, s);
 				}
 			}, this),
-			'stop.owl.autoplay': $.proxy(function(e) {
+			'stop.owl.autoplay': $.proxy(function(e: any) {
 				if (e.namespace) {
 					this.stop();
 				}
@@ -2729,7 +2729,7 @@
 	 * @private
 	 * @param {Number} [speed] - The animation speed for the animations.
 	 */
-	Autoplay.prototype._next = function(speed) {
+	Autoplay.prototype._next = function(speed: number) {
 		this._call = window.setTimeout(
 			$.proxy(this._next, this, speed),
 			this._timeout * (Math.round(this.read() / this._timeout) + 1) - this.read()
@@ -2755,7 +2755,7 @@
 	 * @param {Number} [timeout] - The interval before the next animation starts.
 	 * @param {Number} [speed] - The animation speed for the animations.
 	 */
-	Autoplay.prototype.play = function(timeout, speed) {
+	Autoplay.prototype.play = function(timeout: number, speed: number) {
 		var elapsed;
 
 		if (!this._core.is('rotating')) {
@@ -2778,7 +2778,7 @@
 		}
 
 		// Adjust the origin of the timer to match the new timeout value.
-		this._time += this.read() % timeout - elapsed;
+		this._time +=			this.read() % timeout - elapsed;
 
 		this._timeout = timeout;
 		this._call = window.setTimeout($.proxy(this._next, this, speed), timeout - elapsed);
@@ -2840,7 +2840,7 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 	'use strict';
 
 	/**
@@ -2848,7 +2848,7 @@
 	 * @class The Navigation Plugin
 	 * @param {Owl} carousel - The Owl Carousel.
 	 */
-	var Navigation = function(carousel) {
+	var Navigation = function(carousel: any) {
 		/**
 		 * Reference to the core.
 		 * @protected
@@ -2907,28 +2907,28 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'prepared.owl.carousel': $.proxy(function(e) {
+			'prepared.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.dotsData) {
 					this._templates.push('<div class="' + this._core.settings.dotClass + '">' +
 						$(e.content).find('[data-dot]').addBack('[data-dot]').attr('data-dot') + '</div>');
 				}
 			}, this),
-			'added.owl.carousel': $.proxy(function(e) {
+			'added.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.dotsData) {
 					this._templates.splice(e.position, 0, this._templates.pop());
 				}
 			}, this),
-			'remove.owl.carousel': $.proxy(function(e) {
+			'remove.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.dotsData) {
 					this._templates.splice(e.position, 1);
 				}
 			}, this),
-			'changed.owl.carousel': $.proxy(function(e) {
+			'changed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && e.property.name == 'position') {
 					this.draw();
 				}
 			}, this),
-			'initialized.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && !this._initialized) {
 					this._core.trigger('initialize', null, 'navigation');
 					this.initialize();
@@ -2938,7 +2938,7 @@
 					this._core.trigger('initialized', null, 'navigation');
 				}
 			}, this),
-			'refreshed.owl.carousel': $.proxy(function(e) {
+			'refreshed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._initialized) {
 					this._core.trigger('refresh', null, 'navigation');
 					this.update();
@@ -3000,14 +3000,14 @@
 			.addClass(settings.navClass[0])
 			.html(settings.navText[0])
 			.prependTo(this._controls.$relative)
-			.on('click', $.proxy(function(e) {
+			.on('click', $.proxy(function(e: any) {
 				this.prev(settings.navSpeed);
 			}, this));
 		this._controls.$next = $('<' + settings.navElement + '>')
 			.addClass(settings.navClass[1])
 			.html(settings.navText[1])
 			.appendTo(this._controls.$relative)
-			.on('click', $.proxy(function(e) {
+			.on('click', $.proxy(function(e: any) {
 				this.next(settings.navSpeed);
 			}, this));
 
@@ -3022,7 +3022,7 @@
 		this._controls.$absolute = (settings.dotsContainer ? $(settings.dotsContainer)
 			: $('<div>').addClass(settings.dotsClass).appendTo(this.$element)).addClass('disabled');
 
-		this._controls.$absolute.on('click', 'button', $.proxy(function(e) {
+		this._controls.$absolute.on('click', 'button', $.proxy(function(e: any) {
 			var index = $(e.target).parent().is(this._controls.$absolute)
 				? $(e.target).index() : $(e.target).parent().index();
 
@@ -3154,7 +3154,7 @@
 	 * @protected
 	 * @param {Event} event - The event object which gets thrown.
 	 */
-	Navigation.prototype.onTrigger = function(event) {
+	Navigation.prototype.onTrigger = function(event: any) {
 		var settings = this._core.settings;
 
 		event.page = {
@@ -3172,7 +3172,7 @@
 	 */
 	Navigation.prototype.current = function() {
 		var current = this._core.relative(this._core.current());
-		return $.grep(this._pages, $.proxy(function(page, index) {
+		return $.grep(this._pages, $.proxy(function(page: any, index: number) {
 			return page.start <= current && page.end >= current;
 		}, this)).pop();
 	};
@@ -3182,7 +3182,7 @@
 	 * @protected
 	 * @returns {Number}
 	 */
-	Navigation.prototype.getPosition = function(successor) {
+	Navigation.prototype.getPosition = function(successor: boolean) {
 		var position, length,
 			settings = this._core.settings;
 
@@ -3205,7 +3205,7 @@
 	 * @public
 	 * @param {Number} [speed=false] - The time in milliseconds for the transition.
 	 */
-	Navigation.prototype.next = function(speed) {
+	Navigation.prototype.next = function(speed: number) {
 		$.proxy(this._overrides.to, this._core)(this.getPosition(true), speed);
 	};
 
@@ -3214,7 +3214,7 @@
 	 * @public
 	 * @param {Number} [speed=false] - The time in milliseconds for the transition.
 	 */
-	Navigation.prototype.prev = function(speed) {
+	Navigation.prototype.prev = function(speed: number) {
 		$.proxy(this._overrides.to, this._core)(this.getPosition(false), speed);
 	};
 
@@ -3225,7 +3225,7 @@
 	 * @param {Number} [speed] - The time in milliseconds for the transition.
 	 * @param {Boolean} [standard=false] - Whether to use the standard behaviour or not.
 	 */
-	Navigation.prototype.to = function(position, speed, standard) {
+	Navigation.prototype.to = function(position: number, speed: number, standard: boolean) {
 		var length;
 
 		if (!standard && this._pages.length) {
@@ -3247,7 +3247,7 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 	'use strict';
 
 	/**
@@ -3255,7 +3255,7 @@
 	 * @class The Hash Plugin
 	 * @param {Owl} carousel - The Owl Carousel
 	 */
-	var Hash = function(carousel) {
+	var Hash = function(carousel: any) {
 		/**
 		 * Reference to the core.
 		 * @protected
@@ -3282,12 +3282,12 @@
 		 * @type {Object}
 		 */
 		this._handlers = {
-			'initialized.owl.carousel': $.proxy(function(e) {
+			'initialized.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && this._core.settings.startPosition === 'URLHash') {
 					$(window).trigger('hashchange.owl.navigation');
 				}
 			}, this),
-			'prepared.owl.carousel': $.proxy(function(e) {
+			'prepared.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace) {
 					var hash = $(e.content).find('[data-hash]').addBack('[data-hash]').attr('data-hash');
 
@@ -3298,10 +3298,10 @@
 					this._hashes[hash] = e.content;
 				}
 			}, this),
-			'changed.owl.carousel': $.proxy(function(e) {
+			'changed.owl.carousel': $.proxy(function(e: any) {
 				if (e.namespace && e.property.name === 'position') {
 					var current = this._core.items(this._core.relative(this._core.current())),
-						hash = $.map(this._hashes, function(item, hash) {
+						hash = $.map(this._hashes, function(item: any, hash: string) {
 							return item === current ? hash : null;
 						}).join();
 
@@ -3321,7 +3321,7 @@
 		this.$element.on(this._handlers);
 
 		// register event listener for hash navigation
-		$(window).on('hashchange.owl.navigation', $.proxy(function(e) {
+		$(window).on('hashchange.owl.navigation', $.proxy(function(e: any) {
 			var hash = window.location.hash.substring(1),
 				items = this._core.$stage.children(),
 				position = this._hashes[hash] && items.index(this._hashes[hash]);
@@ -3343,7 +3343,7 @@
 	};
 
 	/**
-	 * Destroys the plugin.
+	 * Destroy the plugin.
 	 * @public
 	 */
 	Hash.prototype.destroy = function() {
@@ -3372,7 +3372,7 @@
  * @author David Deutsch
  * @license The MIT License (MIT)
  */
-;(function($, window, document, undefined) {
+;(function($: any, window: Window, document: Document, undefined: undefined) {
 
 	var style = $('<support>').get(0).style,
 		prefixes = 'Webkit Moz O ms'.split(' '),
@@ -3409,11 +3409,11 @@
 			}
 		};
 
-	function test(property, prefixed) {
+	function test(property: string, prefixed?: boolean) {
 		var result = false,
 			upper = property.charAt(0).toUpperCase() + property.slice(1);
 
-		$.each((property + ' ' + prefixes.join(upper + ' ') + upper).split(' '), function(i, property) {
+		$.each((property + ' ' + prefixes.join(upper + ' ') + upper).split(' '), function(i: number, property: string) {
 			if (style[property] !== undefined) {
 				result = prefixed ? property : true;
 				return false;
@@ -3423,7 +3423,7 @@
 		return result;
 	}
 
-	function prefixed(property) {
+	function prefixed(property: string) {
 		return test(property, true);
 	}
 
